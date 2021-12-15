@@ -3,10 +3,7 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +14,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
         try (Connection connection = Util.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "CREATE TABLE users (id BIGINT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(45), lastName VARCHAR(45), age TINYINT);")) {
-            preparedStatement.executeUpdate();
+             Statement stmt = connection.createStatement();) {
+            stmt.executeUpdate("CREATE TABLE users (id BIGINT PRIMARY KEY AUTO_INCREMENT, name VARCHAR(45), lastName VARCHAR(45), age TINYINT);");
 
         } catch (SQLException ignored) {
         }
@@ -28,8 +24,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() {
         try (Connection connection = Util.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("DROP TABLE users;")) {
-            preparedStatement.execute();
+             Statement stmt = connection.createStatement();) {
+            stmt.executeUpdate("DROP TABLE users;");
 
         } catch (SQLException ignored) {
         }
@@ -66,8 +62,8 @@ public class UserDaoJDBCImpl implements UserDao {
         List<User> users = new ArrayList<>();
 
         try (Connection connection = Util.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM users")) {
-            ResultSet rs = preparedStatement.executeQuery();
+             Statement stmt = connection.createStatement();) {
+            ResultSet rs = stmt.executeQuery("SELECT * FROM USERS");
             while (rs.next()) {
                 Long id = rs.getLong("id");
                 String name = rs.getString("name");
@@ -85,12 +81,24 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() {
         try (Connection connection = Util.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(
-                     "TRUNCATE TABLE users;")) {
-            preparedStatement.execute();
+             Statement stmt = connection.createStatement();) {
+            stmt.executeUpdate("TRUNCATE TABLE users;");
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 }
+
+
+
+//    public void cleanUsersTable() {
+//        try (Connection connection = Util.getConnection();
+//             PreparedStatement preparedStatement = connection.prepareStatement(
+//                     "TRUNCATE TABLE users;")) {
+//            preparedStatement.execute();
+//
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
