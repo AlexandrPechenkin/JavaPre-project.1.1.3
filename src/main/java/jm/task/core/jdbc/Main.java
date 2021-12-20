@@ -1,7 +1,14 @@
 package jm.task.core.jdbc;
 
 
+import jm.task.core.jdbc.dao.UserDaoHibernateImpl;
+import jm.task.core.jdbc.dao.UserDaoJDBCImpl;
 import jm.task.core.jdbc.service.UserServiceImpl;
+import jm.task.core.jdbc.util.HibernateUtil;
+import org.hibernate.Session;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class Main {
