@@ -81,11 +81,12 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void removeUserById(long id) {
         Transaction transaction = null;
+        User removeUser;
 
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.getTransaction().begin();
-            User removeUser = session.get(User.class, id);
+            removeUser = session.get(User.class, id);
             session.delete(removeUser);
             session.getTransaction().commit();
             session.close();
@@ -98,7 +99,7 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        List users = null;
+        List<User> users = null;
         Transaction transaction = null;
 
         try {
