@@ -101,10 +101,10 @@ public class UserDaoHibernateImpl implements UserDao {
     public List<User> getAllUsers() {
         List<User> users = null;
         Transaction transaction = null;
+        String sql = "From " + User.class.getSimpleName();
 
         try {
             session = HibernateUtil.getSessionFactory().openSession();
-            String sql = "From " + User.class.getSimpleName();
             users = session.createQuery(sql).list();
             return users;
         } catch (Exception e) {
@@ -118,19 +118,20 @@ public class UserDaoHibernateImpl implements UserDao {
     @Override
     public void cleanUsersTable() {
         Transaction transaction = null;
+        Query query;
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
 
             String sql = "truncate table users";
 
-            Query query = session.createSQLQuery(sql).addEntity(User.class);
+            query = session.createSQLQuery(sql).addEntity(User.class);
             query.executeUpdate();
             transaction.commit();
             session.close();
         } catch (Exception e) {
             e.printStackTrace();
-            assert transaction != null;
+            assert false;
             transaction.rollback();
         }
     }
