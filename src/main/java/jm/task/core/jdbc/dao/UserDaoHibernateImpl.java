@@ -21,6 +21,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void createUsersTable() {
         Transaction transaction;
         Query query;
+
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
@@ -42,6 +43,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void dropUsersTable() {
         Transaction transaction;
         Query query;
+
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             transaction = session.beginTransaction();
@@ -60,6 +62,7 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         Transaction transaction = null;
         User user;
+
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             session.getTransaction().begin();
