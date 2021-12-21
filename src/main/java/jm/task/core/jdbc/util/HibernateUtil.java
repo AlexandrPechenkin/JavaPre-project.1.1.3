@@ -12,12 +12,15 @@ import org.hibernate.service.ServiceRegistry;
 public class HibernateUtil {
     private static SessionFactory sessionFactory;
 
+    private HibernateUtil() {
+    }
+
     public static SessionFactory getSessionFactory() {
         if (sessionFactory == null) {
             try {
                 Configuration configuration = new Configuration();
-
                 Properties settings = new Properties();
+
                 settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
                 settings.put(Environment.URL, "jdbc:mysql://localhost:3306/mydbtest");
                 settings.put(Environment.USER, "root");

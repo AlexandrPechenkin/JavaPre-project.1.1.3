@@ -8,94 +8,130 @@ import org.hibernate.Transaction;
 
 import javax.persistence.Query;
 
-import java.util.Iterator;
+import java.sql.Connection;
+import java.sql.Savepoint;
 import java.util.List;
 
 
 public class UserDaoHibernateImpl implements UserDao {
-    public UserDaoHibernateImpl() {
+    private Session session;
 
+    public UserDaoHibernateImpl() {
     }
 
     @Override
     public void createUsersTable() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
 
-        String sql = "CREATE TABLE IF NOT EXISTS users " +
-                "(id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
-                "name VARCHAR(50) NOT NULL, lastName VARCHAR(50) NOT NULL, " +
-                "age TINYINT NOT NULL)";
+            String sql = "CREATE TABLE IF NOT EXISTS users " +
+                    "(id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY, " +
+                    "name VARCHAR(50) NOT NULL, lastName VARCHAR(50) NOT NULL, " +
+                    "age TINYINT NOT NULL)";
 
-        Query query = session.createSQLQuery(sql).addEntity(User.class);
-        query.executeUpdate();
-        transaction.commit();
-        session.close();
+            Query query = session.createSQLQuery(sql).addEntity(User.class);
+            query.executeUpdate();
+            transaction.commit();
+            session.close();
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
     public void dropUsersTable() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            Transaction transaction = session.beginTransaction();
 
-        String sql = "DROP TABLE IF EXISTS users";
+            String sql = "DROP TABLE IF EXISTS users";
 
-        Query query = session.createSQLQuery(sql).addEntity(User.class);
-        query.executeUpdate();
-        transaction.commit();
-        session.close();
+            Query query = session.createSQLQuery(sql).addEntity(User.class);
+            query.executeUpdate();
+            transaction.commit();
+            session.close();
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
     public void saveUser(String name, String lastName, byte age) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.getTransaction().begin();
+        Transaction transaction = null;
 
-        User user = new User();
-        user.setName(name);
-        user.setLastName(lastName);
-        user.setAge(age);
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            session.getTransaction().begin();
 
-        session.save(user);
+            User user = new User();
+            user.setName(name);
+            user.setLastName(lastName);
+            user.setAge(age);
 
-        session.getTransaction().commit();
-        session.close();
+            session.save(user);
+
+            session.getTransaction().commit();
+            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+            transaction.rollback();
+        }
     }
 
     @Override
     public void removeUserById(long id) {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        session.getTransaction().begin();
-        User removeUser = session.get(User.class, new Long(id));
-        session.delete(removeUser);
-        session.getTransaction().commit();
-        session.close();
+        Transaction transaction = null;
+
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            session.getTransaction().begin();
+            User removeUser = session.get(User.class, id);
+            session.delete(removeUser);
+            session.getTransaction().commit();
+            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+            transaction.rollback();
+        }
     }
 
     @Override
     public List<User> getAllUsers() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        String sql = "From " + User.class.getSimpleName();
-        List users = session.createQuery(sql).list();
+        List users = null;
+        Transaction transaction = null;
 
-        for (Iterator<User> it = users.iterator(); it.hasNext(); ) {
-            User user = it.next();
-            System.out.println(user.toString());
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            String sql = "From " + User.class.getSimpleName();
+            users = session.createQuery(sql).list();
+            return users;
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert false;
+            transaction.rollback();
         }
         return users;
     }
 
     @Override
     public void cleanUsersTable() {
-        Session session = HibernateUtil.getSessionFactory().openSession();
-        Transaction transaction = session.beginTransaction();
+        Transaction transaction = null;
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            transaction = session.beginTransaction();
 
-        String sql = "delete from users";
+            String sql = "truncate table users";
 
-        Query query = session.createSQLQuery(sql).addEntity(User.class);
-        query.executeUpdate();
-        transaction.commit();
-        session.close();
+            Query query = session.createSQLQuery(sql).addEntity(User.class);
+            query.executeUpdate();
+            transaction.commit();
+            session.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            assert transaction != null;
+            transaction.rollback();
+        }
     }
 }
 
