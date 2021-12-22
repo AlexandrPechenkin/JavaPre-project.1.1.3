@@ -39,6 +39,7 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction.commit();
         } catch (Exception ignored) {
         } finally {
+            assert session != null;
             session.close();
         }
     }
@@ -60,6 +61,7 @@ public class UserDaoHibernateImpl implements UserDao {
             transaction.commit();
         } catch (Exception ignored) {
         } finally {
+            assert session != null;
             session.close();
         }
     }
@@ -87,6 +89,7 @@ public class UserDaoHibernateImpl implements UserDao {
             assert false;
             transaction.rollback();
         } finally {
+            assert session != null;
             session.close();
         }
     }
@@ -108,6 +111,7 @@ public class UserDaoHibernateImpl implements UserDao {
             assert false;
             transaction.rollback();
         } finally {
+            assert session != null;
             session.close();
         }
     }
@@ -128,6 +132,7 @@ public class UserDaoHibernateImpl implements UserDao {
             assert false;
             transaction.rollback();
         } finally {
+            assert session != null;
             session.close();
         }
         return users;
@@ -152,6 +157,7 @@ public class UserDaoHibernateImpl implements UserDao {
             assert false;
             transaction.rollback();
         } finally {
+            assert session != null;
             session.close();
         }
     }
