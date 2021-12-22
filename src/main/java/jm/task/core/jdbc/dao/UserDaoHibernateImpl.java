@@ -127,6 +127,8 @@ public class UserDaoHibernateImpl implements UserDao {
             e.printStackTrace();
             assert false;
             transaction.rollback();
+        } finally {
+            session.close();
         }
         return users;
     }
@@ -145,11 +147,12 @@ public class UserDaoHibernateImpl implements UserDao {
             query = session.createSQLQuery(sql).addEntity(User.class);
             query.executeUpdate();
             transaction.commit();
-            session.close();
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
             transaction.rollback();
+        } finally {
+            session.close();
         }
     }
 }
