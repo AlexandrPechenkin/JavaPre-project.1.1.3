@@ -1,7 +1,7 @@
 package jm.task.core.jdbc;
 
+import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.service.UserServiceImpl;
-
 
 
 public class Main {
@@ -20,7 +20,9 @@ public class Main {
         userService.saveUser("Petr", "Petrov", (byte) 28);
         System.out.println("User с именем – Petr добавлен в базу данных");
 
-        System.out.println(userService.getAllUsers());
+        for (User user : userService.getAllUsers()) {
+            System.out.println(user);
+        }
 
         userService.cleanUsersTable();
 
