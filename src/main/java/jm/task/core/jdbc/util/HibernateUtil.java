@@ -10,8 +10,8 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
-    private static SessionFactory sessionFactory = null;
-    private static HibernateUtil hibernateUtil = null;
+    private static SessionFactory sessionFactory;
+    private static HibernateUtil hibernateUtil;
 
     private HibernateUtil() {
     }
