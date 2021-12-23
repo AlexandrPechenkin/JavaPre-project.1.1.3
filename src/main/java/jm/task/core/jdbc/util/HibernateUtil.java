@@ -10,7 +10,7 @@ import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
 public class HibernateUtil {
-    private static SessionFactory sessionFactory;
+    private static SessionFactory sessionFactory = null;
 
     private HibernateUtil() {
     }
@@ -41,6 +41,7 @@ public class HibernateUtil {
                         .applySettings(configuration.getProperties()).build();
 
                 sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

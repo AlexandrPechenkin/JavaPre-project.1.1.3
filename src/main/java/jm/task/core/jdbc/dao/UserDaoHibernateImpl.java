@@ -23,10 +23,8 @@ public class UserDaoHibernateImpl implements UserDao {
     public void createUsersTable() {
         Transaction transaction;
         Query query;
-        Session session = null;
 
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
 
             String sql = "CREATE TABLE IF NOT EXISTS users " +
@@ -38,9 +36,6 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception ignored) {
-        } finally {
-            assert session != null;
-            session.close();
         }
     }
 
@@ -48,10 +43,8 @@ public class UserDaoHibernateImpl implements UserDao {
     public void dropUsersTable() {
         Transaction transaction;
         Query query;
-        Session session = null;
 
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
 
             String sql = "DROP TABLE IF EXISTS users";
@@ -60,9 +53,6 @@ public class UserDaoHibernateImpl implements UserDao {
             query.executeUpdate();
             transaction.commit();
         } catch (Exception ignored) {
-        } finally {
-            assert session != null;
-            session.close();
         }
     }
 
@@ -70,10 +60,8 @@ public class UserDaoHibernateImpl implements UserDao {
     public void saveUser(String name, String lastName, byte age) {
         Transaction transaction = null;
         User user;
-        Session session = null;
 
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             session.getTransaction().begin();
 
             user = new User();
@@ -88,9 +76,6 @@ public class UserDaoHibernateImpl implements UserDao {
             e.printStackTrace();
             assert false;
             transaction.rollback();
-        } finally {
-            assert session != null;
-            session.close();
         }
     }
 
@@ -98,10 +83,8 @@ public class UserDaoHibernateImpl implements UserDao {
     public void removeUserById(long id) {
         Transaction transaction = null;
         User removeUser;
-        Session session = null;
 
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             session.getTransaction().begin();
             removeUser = session.get(User.class, id);
             session.delete(removeUser);
@@ -110,9 +93,6 @@ public class UserDaoHibernateImpl implements UserDao {
             e.printStackTrace();
             assert false;
             transaction.rollback();
-        } finally {
-            assert session != null;
-            session.close();
         }
     }
 
@@ -121,19 +101,14 @@ public class UserDaoHibernateImpl implements UserDao {
         List<User> users = null;
         Transaction transaction = null;
         String sql = "From " + User.class.getSimpleName();
-        Session session = null;
 
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             users = session.createQuery(sql).list();
             return users;
         } catch (Exception e) {
             e.printStackTrace();
             assert false;
             transaction.rollback();
-        } finally {
-            assert session != null;
-            session.close();
         }
         return users;
     }
@@ -143,10 +118,8 @@ public class UserDaoHibernateImpl implements UserDao {
         Transaction transaction = null;
         Query query;
         String sql = "truncate table users";
-        Session session = null;
 
-        try {
-            session = sessionFactory.openSession();
+        try (Session session = sessionFactory.openSession()) {
             transaction = session.beginTransaction();
 
             query = session.createSQLQuery(sql).addEntity(User.class);
@@ -156,9 +129,6 @@ public class UserDaoHibernateImpl implements UserDao {
             e.printStackTrace();
             assert false;
             transaction.rollback();
-        } finally {
-            assert session != null;
-            session.close();
         }
     }
 }
