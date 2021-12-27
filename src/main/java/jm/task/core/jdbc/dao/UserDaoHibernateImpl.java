@@ -8,13 +8,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaQuery;
 
 import java.util.List;
 
 
 public class UserDaoHibernateImpl implements UserDao {
 
-    private static SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private static HibernateUtil hybernateUtil = HibernateUtil.getHibernateUtil();
+    SessionFactory sessionFactory = hybernateUtil.getSessionFactory();
 
     public UserDaoHibernateImpl() {
     }
@@ -98,17 +100,15 @@ public class UserDaoHibernateImpl implements UserDao {
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = null;
-        Transaction transaction = null;
-        String sql = "From " + User.class.getSimpleName();
-
-        try (Session session = sessionFactory.openSession()) {
-            users = session.createQuery(sql).list();
-            return users;
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert false;
-            transaction.rollback();
+        Session session = HibernateUtil.getSessionFactory().openSession();
+        Transaction transaction = session.beginTransaction();
+        CriteriaQuery<User> criteriaQuery = session.getCriteriaBuilder().createQuery(User.class);
+        criteriaQuery.from(User.class);
+        List<User> users = session.createQuery(criteriaQuery).getResultList();
+        transaction.commit();
+        session.close();
+        for (User u : users) {
+            System.out.println(u);
         }
         return users;
     }
